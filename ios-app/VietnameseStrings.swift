@@ -651,6 +651,9 @@ let vietnameseStrings: [String: String] = [
     "Advanced": "Nâng cao",
     "Clear": "Xóa hết",
     "Activity Log (%d)": "Nhật ký hoạt động (%d)",
+    "Verbose logging": "Nhật ký chi tiết",
+    "Adds the messages exchanged with iOS to the log, for tracking down a connection problem. Leave it off otherwise, as they quickly fill the log.":
+        "Thêm các thông điệp trao đổi với iOS vào nhật ký, để tìm ra sự cố kết nối. Những lúc khác hãy để tắt, vì chúng nhanh chóng làm đầy nhật ký.",
 
     // Settings › Developer Mode: AMFI requests over the device link.
     "Developer Mode": "Chế độ nhà phát triển",
@@ -1028,6 +1031,7 @@ let vietnameseStrings: [String: String] = [
         "Vì đã hỗ trợ và phát hiện những lỗi sau đó được sửa.",
     "For the Japanese translation.": "Vì bản dịch tiếng Nhật.",
     "For the Korean translation.": "Vì bản dịch tiếng Hàn.",
+    "For the Turkish translation.": "Vì bản dịch tiếng Thổ Nhĩ Kỳ.",
 
     "Built with": "Được xây dựng với",
     "The open source work this app is built on:":

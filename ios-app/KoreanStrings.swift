@@ -545,6 +545,9 @@ let koreanStrings: [String: String] = [
     "Advanced": "고급",
     "Clear": "지우기",
     "Activity Log (%d)": "활동 로그 (%d)",
+    "Verbose logging": "상세 로그",
+    "Adds the messages exchanged with iOS to the log, for tracking down a connection problem. Leave it off otherwise, as they quickly fill the log.":
+        "iOS와 주고받는 메시지를 로그에 추가해 연결 문제를 찾을 수 있게 합니다. 로그가 금방 가득 차므로 그 밖에는 꺼 두세요.",
 
     // Settings › Developer Mode: AMFI requests over the device link.
     "Developer Mode": "개발자 모드",
@@ -1008,6 +1011,7 @@ let koreanStrings: [String: String] = [
         "응원해 주시고, 버그를 찾아내 고칠 수 있게 도와주셔서 감사합니다.",
     "For the Japanese translation.": "일본어 번역에 감사드립니다.",
     "For the Korean translation.": "한국어 번역에 감사드립니다.",
+    "For the Turkish translation.": "터키어 번역에 감사드립니다.",
 
     "Built with": "사용된 오픈 소스",
     "The open source work this app is built on:": "이 앱의 기반이 된 오픈 소스 작업물입니다:",

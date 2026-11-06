@@ -656,6 +656,9 @@ let frenchStrings: [String: String] = [
     "Advanced": "Avancé",
     "Clear": "Effacer",
     "Activity Log (%d)": "Journal d'activité (%d)",
+    "Verbose logging": "Journal détaillé",
+    "Adds the messages exchanged with iOS to the log, for tracking down a connection problem. Leave it off otherwise, as they quickly fill the log.":
+        "Ajoute au journal les messages échangés avec iOS, pour identifier un problème de connexion. Le reste du temps, laissez-le désactivé, car ils remplissent vite le journal.",
 
     // Settings › Developer Mode: AMFI requests over the device link.
     "Developer Mode": "Mode développeur",
@@ -1036,6 +1039,7 @@ let frenchStrings: [String: String] = [
         "Pour le soutien et pour avoir repéré les bugs qui ont ensuite été corrigés.",
     "For the Japanese translation.": "Pour la traduction japonaise.",
     "For the Korean translation.": "Pour la traduction coréenne.",
+    "For the Turkish translation.": "Pour la traduction turque.",
 
     "Built with": "Construit avec",
     "The open source work this app is built on:":

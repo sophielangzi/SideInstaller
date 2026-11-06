@@ -631,6 +631,9 @@ let chineseStrings: [String: String] = [
     "Advanced": "高级",
     "Clear": "清除",
     "Activity Log (%d)": "活动日志（%d）",
+    "Verbose logging": "详细日志",
+    "Adds the messages exchanged with iOS to the log, for tracking down a connection problem. Leave it off otherwise, as they quickly fill the log.":
+        "将与 iOS 往来的消息写入日志，用于排查连接问题。其他时候请保持关闭，因为这些消息很快就会占满日志。",
 
     // Settings › Developer Mode: AMFI requests over the device link.
     "Developer Mode": "开发者模式",
@@ -1002,6 +1005,7 @@ let chineseStrings: [String: String] = [
         "感谢一路以来的支持，以及发现了那些因此得到修复的问题。",
     "For the Japanese translation.": "感谢提供日语翻译。",
     "For the Korean translation.": "感谢提供韩语翻译。",
+    "For the Turkish translation.": "感谢提供土耳其语翻译。",
 
     "Built with": "基于以下项目",
     "The open source work this app is built on:": "这个应用所依赖的开源成果：",

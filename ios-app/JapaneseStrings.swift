@@ -544,6 +544,9 @@ let japaneseStrings: [String: String] = [
     "Advanced": "詳細設定",
     "Clear": "消去",
     "Activity Log (%d)": "アクティビティログ（%d）",
+    "Verbose logging": "詳細ログ",
+    "Adds the messages exchanged with iOS to the log, for tracking down a connection problem. Leave it off otherwise, as they quickly fill the log.":
+        "iOS とやり取りするメッセージをログに追加し、接続の問題を調べられるようにします。すぐにログがいっぱいになるため、それ以外のときはオフにしておいてください。",
 
     // Settings › Developer Mode: AMFI requests over the device link.
     "Developer Mode": "デベロッパモード",
@@ -1007,6 +1010,7 @@ let japaneseStrings: [String: String] = [
         "これまでのご支援と、そのおかげで発見・修正できたバグに感謝します。",
     "For the Japanese translation.": "日本語への翻訳に感謝します。",
     "For the Korean translation.": "韓国語への翻訳に感謝します。",
+    "For the Turkish translation.": "トルコ語への翻訳に感謝します。",
 
     "Built with": "使用しているオープンソース",
     "The open source work this app is built on:": "このアプリの基盤となっているオープンソースの成果：",
