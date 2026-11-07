@@ -23,7 +23,6 @@ struct RootView: View {
     /// One popup, tagged with the page that raised it.
     private enum PopupItem: Hashable {
         case install(Engine.Popup)
-        case sideBySide(SideBySideManager.Popup)
         case pairing(PairingManager.Popup)
         case certificates(ToolPopup)
         case entitlements(EntitlementsManager.Popup)
@@ -42,8 +41,6 @@ struct RootView: View {
         /// A finished install: the news, the trust step, and LiveContainer's
         /// certificate import.
         case installFinished
-        /// Side by Side's pairing code and the steps for their iPhone.
-        case sideBySidePairing
         /// The Pairing page's code and the steps for Settings.
         case pairingPage
     }
@@ -129,7 +126,7 @@ struct RootView: View {
         // A swipe down is a cancel; the sign-in closing it is not.
         .sheet(isPresented: Binding(
             get: { engine.twoFactor != nil },
-            set: { if !$0 { engine.cancelTwoFactor() } }
+            set: { if !$0, let phase = engine.twoFactor { engine.cancelTwoFactor(phase) } }
         )) {
             if let phase = engine.twoFactor ?? shownTwoFactor {
                 TwoFactorSheet(phase: phase)
@@ -138,10 +135,10 @@ struct RootView: View {
         .onChange(of: engine.twoFactor) { old, phase in
             if let phase { shownTwoFactor = phase }
             // A code is wanted, or the one entered was turned down.
-            if case .asking(let prompt) = phase {
-                if old == nil {
+            if let phase, phase.isAsking {
+                if old?.signIn != phase.signIn {
                     SoundEffects.play(.attention)
-                } else if case .working = old, prompt.lastError != nil {
+                } else if old?.isAsking == false, phase.prompt.lastError != nil {
                     SoundEffects.play(.error)
                 }
             }
@@ -164,7 +161,6 @@ struct RootView: View {
     /// never pushed down out of sight.
     private var popups: [PopupItem] {
         let pages = [engine.popups.map(PopupItem.install),
-                     sideBySideManager.popups.map(PopupItem.sideBySide),
                      pairingManager.popups.map(PopupItem.pairing),
                      certManager.popups.map(PopupItem.certificates),
                      entitlementsManager.popups.map(PopupItem.entitlements),
@@ -198,10 +194,10 @@ struct RootView: View {
     /// What a popup sounds like as it comes up, if anything.
     private func sound(for item: PopupItem) -> UISound? {
         switch item {
-        case .install(.error), .install(.certConflict), .sideBySide(.error), .pairing(.error),
+        case .install(.error), .install(.certConflict), .pairing(.error),
              .certificates(.error), .entitlements(.error), .location(.error), .apps(.error):
             .error
-        case .install(.success), .sideBySide(.success), .pairing(.success),
+        case .install(.success), .pairing(.success),
              .certificates(.success), .location(.success), .apps(.success):
             .success
         // Apple granting nothing it was asked for is a failure.
@@ -213,8 +209,7 @@ struct RootView: View {
             engine.isRunning ? .attention : nil
         // Waiting on the user: a code to type, steps to follow, a go-ahead.
         case .install(.pairingCode), .install(.liveContainerImport), .install(.appIDCost),
-             .install(.link), .sideBySide(.pairingCode), .sideBySide(.pairInSettings),
-             .pairing(.pairingCode), .pairing(.pairInSettings):
+             .install(.link), .pairing(.pairingCode), .pairing(.pairInSettings):
             .attention
         }
     }
@@ -223,7 +218,6 @@ struct RootView: View {
     private func blocks(_ item: PopupItem) -> Bool {
         switch item {
         case .install(let popup):    engine.blocks(popup)
-        case .sideBySide(let popup): sideBySideManager.blocks(popup)
         case .pairing(let popup):    pairingManager.blocks(popup)
         // The Tools pages only report; nothing waits on their popups.
         case .certificates, .entitlements, .location, .apps: false
@@ -261,11 +255,9 @@ struct RootView: View {
         // Up on its own, waiting for the go-ahead to sign, or to act on a link.
         case .install(.appIDCost), .install(.link):
             nil
-        case .sideBySide(.pairingCode), .sideBySide(.pairInSettings):
-            .sideBySidePairing
         case .pairing(.pairingCode), .pairing(.pairInSettings):
             .pairingPage
-        case .sideBySide, .pairing, .certificates, .entitlements, .location, .apps:
+        case .pairing, .certificates, .entitlements, .location, .apps:
             nil
         }
     }
@@ -290,8 +282,6 @@ struct RootView: View {
                     "exclamationmark.triangle.fill", .red)
         case .installFinished:
             return (L("Success: last steps"), "checkmark.seal.fill", .green)
-        case .sideBySidePairing:
-            return (SideBySidePopup.pairInSettingsTitle, "lock.iphone", Theme.accent)
         case .pairingPage:
             return (PairingPopup.pairInSettingsTitle, "lock.iphone", Theme.accent)
         }
@@ -300,7 +290,6 @@ struct RootView: View {
     private func close(_ item: PopupItem) {
         switch item {
         case .install(let popup):      engine.closePopup(popup)
-        case .sideBySide(let popup):   sideBySideManager.closePopup(popup)
         case .pairing(let popup):      pairingManager.closePopup(popup)
         case .certificates(let popup): certManager.closePopup(popup)
         case .entitlements(let popup): entitlementsManager.closePopup(popup)
@@ -335,8 +324,6 @@ struct RootView: View {
         switch item {
         case .install(let popup):
             InstallPopup(popup: popup)
-        case .sideBySide(let popup):
-            SideBySidePopup(manager: sideBySideManager, popup: popup)
         case .pairing(let popup):
             PairingPopup(manager: pairingManager, popup: popup)
         case .certificates(let popup):
@@ -382,9 +369,7 @@ struct TwoFactorSheet: View {
     private var prompt: TwoFactorPrompt { phase.prompt }
 
     /// The answer the sign-in is acting on, while it does.
-    private var pending: TwoFactorAnswer? {
-        if case .working(_, let answer) = phase { answer } else { nil }
-    }
+    private var pending: TwoFactorAnswer? { phase.answer }
 
     var body: some View {
         NavigationStack {
@@ -418,6 +403,10 @@ struct TwoFactorSheet: View {
                                 .foregroundStyle(.secondary)
                         }
                     }
+                } footer: {
+                    // Whose code it is: Side by Side signs in with someone
+                    // else's Apple ID, and can be queued behind the install's.
+                    Label(phase.appleID, systemImage: "person.crop.circle")
                 }
                 Section {
                     options
@@ -430,11 +419,11 @@ struct TwoFactorSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button(L("Cancel")) { engine.cancelTwoFactor() }
+                    Button(L("Cancel")) { engine.cancelTwoFactor(phase) }
                 }
                 if prompt.expectsCode {
                     ToolbarItem(placement: .topBarTrailing) {
-                        Button(L("Verify")) { engine.answerTwoFactor(.code(code)) }
+                        Button(L("Verify")) { engine.answerTwoFactor(.code(code), to: phase) }
                             .disabled(pending != nil || code.count != 6)
                     }
                 }
@@ -442,11 +431,18 @@ struct TwoFactorSheet: View {
         }
         .onAppear { codeFocused = prompt.expectsCode }
         .onChange(of: phase) { _, phase in
+            // Checking an answer disables the field, which takes the keyboard
+            // away. Unfocused here too, so focusing it again below is a change.
+            guard phase.isAsking else {
+                codeFocused = false
+                return
+            }
             // A fresh prompt — after a wrong code, or with a new code on its way —
             // starts from an empty field.
-            guard case .asking(let prompt) = phase else { return }
             code = ""
-            codeFocused = prompt.expectsCode
+            // Focused a turn later: until then the field is still disabled, or
+            // not there yet after choosing how to get a code, and can't take it.
+            Task { @MainActor in codeFocused = phase.prompt.expectsCode }
         }
     }
 
@@ -475,7 +471,7 @@ struct TwoFactorSheet: View {
     }
 
     private func option(_ title: String, _ systemImage: String, _ answer: TwoFactorAnswer) -> some View {
-        Button { engine.answerTwoFactor(answer) } label: {
+        Button { engine.answerTwoFactor(answer, to: phase) } label: {
             Label(title, systemImage: systemImage)
         }
     }
@@ -539,9 +535,7 @@ struct ToolsView: View {
                         NavigationLink {
                             SideBySideView(manager: sideBySideManager)
                         } label: {
-                            ToolTile(image: "SideBySideLogo",
-                                     title: L("Side by Side"),
-                                     beta: true)
+                            ToolTile(image: "SideBySideLogo", title: L("Side by Side"))
                         }
                         .buttonStyle(.plain, sound: .tick)
                         .cascadeItem(1)
