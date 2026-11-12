@@ -1,19 +1,20 @@
 #!/bin/sh
-# Installs siboot into Open Minis and runs it, which pairs this iPhone with
-# itself, signs SideInstaller with your Apple Account and installs it.
+# Installs siboot into Open Minis and runs it, which takes the pairing from
+# siboot-pair in rootshell, signs SideInstaller with your Apple Account and
+# installs it.
 #
-# In Minis's terminal (Minis › Settings › Terminal):
+# In Minis's terminal (Minis › Settings › Terminal), with siboot-pair still
+# running in rootshell:
 #
 #   wget -qO- https://raw.githubusercontent.com/FrizzleM/SideInstaller/main/minis/install.sh | sh
 #
-# Arguments for siboot go after `sh -s --`, e.g. `… | sh -s -- check`.
 # Afterwards `siboot` runs it again, without downloading.
 set -eu
 
 BASE="${SIBOOT_BASE:-https://raw.githubusercontent.com/FrizzleM/SideInstaller/main/minis}"
 # Of bin/siboot-aarch64, updated with it: a download that doesn't match (an
 # error page, a cut-off transfer) is never run.
-SHA256="d362ac159abacd9d417243a96d4212f4ba0a4190bbda6d95ed1832be256e8e49"
+SHA256="293513efc5db281ba226c452b61c4ead39f0eeaf0cd337e627e1ae9db81d5abd"
 
 DIR="$HOME/.siboot/bin"
 BIN="$DIR/siboot"
