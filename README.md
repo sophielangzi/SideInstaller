@@ -7,7 +7,7 @@
 **Install SideStore and LiveContainer directly on your iPhone. No PC required.**
 
 [![Install](https://img.shields.io/badge/Install-SideInstaller-2ea44f?style=for-the-badge)](https://sideinstaller.net/)
-[![Version](https://img.shields.io/badge/version-1.7.0-blue?style=for-the-badge)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-2.0.1-2669ed?style=for-the-badge)](CHANGELOG.md)
 [![Platform](https://img.shields.io/badge/platform-iOS-lightgrey?style=for-the-badge&logo=apple)](#requirements)
 [![License](https://img.shields.io/badge/license-Custom-orange?style=for-the-badge)](LICENSE.md)
 
@@ -64,48 +64,46 @@ anyone to read, audit, or contribute to, so you can see exactly what's running o
 
 ## How to use it
 
-1. Open [the official install page](https://sideinstaller.net/) and install the app using any
-   of the certificates.
-2. Once it's installed, open it.
-3. Connect the device to LocalDevVPN (or any alternative)
-4. Log in with your Apple account credentials.
-5. Tap **Install SideStore** or **Install SideStore + LiveContainer**.
-6. Wait while your selection installs.
-7. That's it. No PC and no extra steps required.
+[siboot](https://github.com/FrizzleM/siboot) installs SideInstaller from the iPhone itself, signed
+with your own Apple account: no computer and no certificate. You need iOS 27 or later, Wi-Fi and
+Developer Mode on. [sideinstaller.net](https://sideinstaller.net/) shows steps 1 to 3.
 
-### Without a certificate: from the iPhone itself
-
-No install page, no certificate, no computer: two free App Store apps put SideInstaller on the
-iPhone they run on, signed with your own Apple account. You need iOS 27 or later, Developer Mode on,
-Wi-Fi, and LocalDevVPN connected.
-
-1. Install [rootshell](https://apps.apple.com/app/rootshell-local-terminal-ssh/id6755794662) and
-   [Open Minis](https://apps.apple.com/app/id6759188481) from the App Store.
-2. In rootshell, turn on **Settings › Location Diary Mode › Session Only**. Then run these in its
-   local shell, one line at a time:
+1. **Get the apps.** Install [rootshell](https://apps.apple.com/app/rootshell-local-terminal-ssh/id6755794662),
+   [Open Minis](https://apps.apple.com/app/id6759188481) and
+   [LocalDevVPN](https://apps.apple.com/app/id6755608044), all free on the App Store.
+2. **Pair in rootshell.** Turn on **Settings › Location Diary Mode › Session Only** in rootshell,
+   then tap **Local Shell** and **Open** at the top right, and run these one line at a time:
 
    ```sh
-   curl -fsSLO https://raw.githubusercontent.com/FrizzleM/SideInstaller/main/rootshell/bin/siboot-pair.wasm
+   curl -fsSLO https://raw.githubusercontent.com/FrizzleM/siboot/main/rootshell/bin/siboot-pair.wasm
    ifconfig en0 > ifconfig.txt
    ./siboot-pair.wasm
    ```
 
    Open **Settings › Privacy & Security › Developer Mode**, scroll to the bottom, tap
    **Pair with siboot**, and enter your passcode and the code rootshell shows. Leave rootshell running.
-3. In Open Minis's terminal, run:
+3. **Install from Open Minis.** Connect LocalDevVPN. In Open Minis, tap the console icon at the
+   top right, then **Shell Terminal**, and run:
 
    ```sh
-   wget -qO- https://raw.githubusercontent.com/FrizzleM/SideInstaller/main/minis/install.sh | sh
+   wget -qO- https://raw.githubusercontent.com/FrizzleM/siboot/main/minis/install.sh | sh
    ```
 
-   The first time, type the transfer code rootshell shows (after that, siboot uses the pairing file
-   it saved and doesn't ask). Then type your Apple account email, password and verification code.
-   Keep Minis open until it says it's done.
-4. The first time, trust your Apple account in **Settings › General › VPN & Device Management**, then
-   open SideInstaller.
+   Type the transfer code rootshell shows (only the first time: after that, siboot uses the pairing
+   file it saved), then your Apple account email, password and verification code. Keep Minis open
+   until it says it's done. The first time, trust your Apple account in
+   **Settings › General › VPN & Device Management**.
+4. **Open SideInstaller.** With LocalDevVPN connected, log in with your Apple account and tap
+   **Install SideStore** or **Install SideStore + LiveContainer**.
 
-How it works: [`rootshell/`](rootshell/) pairs the iPhone with itself, and [`minis/`](minis/) signs
-and installs SideInstaller.
+Once paired, `siboot developer-mode` in Open Minis asks the iPhone to show the Developer Mode switch
+in Settings, or with `--turn-on` to turn it on ([details](https://github.com/FrizzleM/siboot/blob/main/minis/README.md#developer-mode)).
+
+### Legacy: enterprise certificates
+
+Before iOS 27, or if siboot doesn't work for you, install SideInstaller with one of the enterprise
+certificates at [sideinstaller.net/#legacy](https://sideinstaller.net/#legacy) instead, then go on
+from step 4.
 
 ### Links
 
@@ -185,13 +183,16 @@ anyone can inspect exactly what it does.
 | `ios-tests/` | The app's unit tests (`SideInstallerTests`) |
 | `rust-core/` | Rust core compiled into `SideInstallerFFI.xcframework` |
 | `scripts/` | Build, check and release scripts |
-| `rootshell/` | siboot-pair, for rootshell: pairs the iPhone with itself from an App Store app |
-| `minis/` | siboot, for Open Minis: takes that pairing, then signs and installs SideInstaller on the same iPhone |
 | `.github/` | Workflows that check pull requests, build the unsigned IPA, publish it as a release and hand it to the signer |
 
 Signed builds and the install page live in [FrizzleM/SideInstaller-Signed](https://github.com/FrizzleM/SideInstaller-Signed):
 it signs each release's IPA with every certificate, attaches the signed IPAs to a release of its own and
 deploys [sideinstaller.net](https://sideinstaller.net/). No IPA is ever committed to either repository.
+
+siboot, which installs SideInstaller [from the iPhone itself](#how-to-use-it),
+lives in [FrizzleM/siboot](https://github.com/FrizzleM/siboot). It builds this repository's vendored crates
+and rust-core's `apple_session.rs` and `error_text.rs` through a submodule pinned to one commit, so a change
+here reaches siboot only when that pin moves.
 
 ## Contributing
 
