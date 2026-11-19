@@ -1262,6 +1262,100 @@ Mode text (the simulator reads the Mac's sysctl, 1) all behaved. Never run on an
 iPhone: whether its own advert is seen from inside the app, whether the sysctl
 can be read there, and whether either report's iPhone had moved its port.
 
+**Knocking for the listener (2026-11-18).** That day siboot users with Developer
+Mode on and LocalDevVPN connected were refused at 10.7.0.1:49152, while another
+iPhone on the same Wi-Fi advertised `_remotepairing._tcp` on 55021. iOS hands
+TCP ports out in order from 49152, not at random (`net.inet.tcp.randomize_ports`
+is 0, as on a Mac), so remotepairingd's listener gets 49152 only when it binds
+first; started later, it gets the next free one. siboot 0.19.1 knocks on the
+other dynamic ports for it, and SideInstaller now does the same when 49152
+refuses and the advert gives no port, or its port refuses too:
+`DeviceConnection.knockForListener` calls `si_find_pairing_port`
+(`rust-core/src/pairing_port.rs`, siboot's `reach`/`search`/`knock` from
+`minis/src/preflight.rs`). In Rust rather than Swift because the answer that
+counts is RPPairing's handshake, which idevice already speaks, and because the
+search can be tested against loopback stand-ins there.
+
+- It knocks on 49152–65535 except lockdownd's 62078 and the ports already
+  refused, in order, 32 connections at a time: 2 s to connect, then 3 s for the
+  answer to RPPairing's first message (`attemptPairVerify`, which only the
+  listener answers). The first port that answers is dialled with
+  `tunnel_create_rppairing_multihost`, as before.
+- It stops after 64 connections in a row that neither refuse nor connect
+  (LocalDevVPN went), once more than 48 ports take the connection without
+  answering (another VPN or a proxy answers for the address), and after running
+  out of descriptors or buffers 256 times. Each of those (EMFILE, ENFILE,
+  ENOBUFS, EADDRNOTAVAIL, EAGAIN) halves the width, down to 4, and the port is
+  knocked on again later.
+- From a Mac over Wi-Fi, iOS refused all 16,382 closed ports in 24 s at 32
+  wide, with no rate limiting (siboot's measurement).
+- The port found, by the advert or the knock, is remembered
+  (`movedListenerPort`) for the next connect in the same run of the app, which
+  dials it first and falls back to 49152 when it refuses; an install connects at
+  least twice. A restart, which moves the listener, ends the run too.
+- Side by Side never knocks (`findsMovedPort` is false there): its listener is
+  another iPhone's.
+- The log gets a line when the knock starts, one at each quarter of the ports,
+  and the result, like the advert lookup's:
+
+      Knocking on this iPhone's other ports: found on port 55021 (RPPairing, wire protocol 26) after 5869 of 16381 ports, in 9.2 s.
+
+  A search that finds nothing ends on the same refusal advice as before, for
+  49152 or the advertised port.
+
+Tested in rust-core: a fake listener that answers the handshake as the iPhone
+does, one that takes the connection and says nothing, one that answers HTTP, and
+closed ports, plus scripted knocks for each stop and the narrower retry. The
+simulator build compiles the Swift side. Never run on an iPhone: how fast
+LocalDevVPN carries 32 knocks at once, and whether the app's descriptor limit is
+ever reached, are unmeasured.
+
+**Probing before the dial (2026-11-18).** Only a refusal started the search,
+and `tunnel_create_rppairing_multihost` has no time limit. So when something
+else held 49152 and took the connection without a word, as the iPhone's other
+listeners do, the dial waited for its handshake answer for ever; when it
+answered something else, the dial failed as `TunnelFailurePairVerify`, whose
+advice is to pair again, and Engine paired again once for nothing when the
+pairing file was a reused one. Now, on this
+iPhone (`findsMovedPort`), `connectRemotePairing` probes each port before it
+dials it: `probeListener` calls `si_probe_pairing_port`, the knock with siboot's
+first-dial limits, 8 s to connect and 10 s for the answer to `attemptPairVerify`
+(the message the dial sends first: `RemotePairingClient::connect` starts with
+it).
+
+- Answered: dialled. Refused, or failed at once some other way (no route,
+  EPERM, out of descriptors): dialled too, since the dial gets the same answer
+  at once and its error says why, so the refusal handling and its advice stay
+  as they were.
+- Took the connection without answering as the listener, by saying nothing
+  within 10 s or something else: not dialled, and passed over like a refused
+  port. The remembered port falls back to 49152, 49152 goes on to the advert
+  and the knock, and the knock skips it. When the listener is on no port, the
+  error is `RsdUnreachable`, so nothing pairs again, with advice of its own:
+  something at the address took the connection but didn't answer as the
+  pairing port; check that LocalDevVPN is the VPN that's on and that Developer
+  Mode is on, then restart the iPhone. A new string, in all nine tables.
+- Neither took nor refused the connection within 8 s: not dialled, and nothing
+  else is tried. The error is the unreachable one (“Couldn't reach the device
+  at … at all”), after 8 s where the dial waited for the OS to give up on the
+  connect (`net.inet.tcp.keepinit`, 75 s on a Mac).
+- A probe is logged only when the port doesn't answer, as in
+
+      Port 49152 took the connection but didn't answer the RPPairing handshake within 10 s. This iPhone's remote pairing advertisement: …
+
+  On the usual path it costs one more connection and round trip through
+  LocalDevVPN before the dial: milliseconds.
+- Side by Side isn't probed (`findsMovedPort` is false), so its dial still has
+  no time limit.
+
+Tested in rust-core with the same stand-ins: the probe's result and log line
+for the RPPairing one, a closed port, the silent one and the HTTP one, the first
+and second through the C call too, and the silence and failures from scripted
+knocks. Never run on an iPhone. The dial comes milliseconds after the probe's
+connection closes; siboot has probed before pairing since its first Open Minis
+version (2026-11-10), and its 0.18.0 paired an iPhone, but its next connection
+comes later.
+
 ## Resuming downloads
 
 Every IPA download from GitHub — SideStore, LiveContainer + SideStore, the

@@ -16,6 +16,7 @@ mod ffi_util;
 mod logging;
 mod p12;
 mod pairing;
+mod pairing_port;
 mod team;
 
 use std::ffi::{c_char, c_void};
@@ -154,6 +155,60 @@ pub unsafe extern "C" fn si_pairing_cancel_free(cancel: *mut PairCancel) {
 #[no_mangle]
 pub unsafe extern "C" fn si_pairing_result_free(r: *mut PairResult) {
     pairing::result_free(r)
+}
+
+// ---------------------------------------------------------------------------
+// Pairing port — this iPhone's RPPairing listener when it isn't on 49152
+// ---------------------------------------------------------------------------
+
+/// Knock on `device_ip`'s dynamic ports (49152–65535), except lockdownd's
+/// 62078 and the `tried_count` ports in `tried`, 32 at a time, in order, until
+/// one answers the RPPairing handshake (`attemptPairVerify`). For the
+/// listener `tunnel_create_rppairing_multihost` dials when it isn't where it
+/// was looked for (see `pairing_port`). Blocks for seconds, so run it off the
+/// main thread.
+///
+/// Returns 0 with the port in `*out_port` when one answered, 1 when none did,
+/// 2 when knocking had to stop (the route went, too many ports took the
+/// connection, or the app ran out of descriptors), and -1 for an address that
+/// isn't one. `*out_summary` says what happened, for the log; free it with
+/// `si_string_free`.
+///
+/// # Safety
+/// See `pairing_port::find_ffi`.
+#[no_mangle]
+pub unsafe extern "C" fn si_find_pairing_port(
+    device_ip: *const c_char,
+    tried: *const u16,
+    tried_count: usize,
+    out_port: *mut u16,
+    out_summary: *mut *mut c_char,
+) -> i32 {
+    pairing_port::find_ffi(device_ip, tried, tried_count, out_port, out_summary)
+}
+
+/// Ask `device_ip:port` for the RPPairing handshake (`attemptPairVerify`), as
+/// `tunnel_create_rppairing_multihost` does first, but with 8 s to connect and
+/// 10 s to answer. The dial has no time limit, so a port that takes the
+/// connection and never answers would hold it for ever. Blocks for up to 18 s,
+/// so run it off the main thread.
+///
+/// Returns 0 when the port answered as the pairing service, 1 when it refused
+/// the connection, 2 when something took the connection and didn't answer as
+/// the service (nothing within 10 s, or something else), 3 when nothing took or
+/// refused it within 8 s, 4 when the connection failed some other way, and -1
+/// for an address that isn't one. `*out_summary` says what the port did, for
+/// the log after "Port N"; free it with `si_string_free`.
+///
+/// # Safety
+/// See `pairing_port::probe_ffi`.
+#[no_mangle]
+pub unsafe extern "C" fn si_probe_pairing_port(
+    device_ip: *const c_char,
+    port: u16,
+    out_summary: *mut *mut c_char,
+) -> i32 {
+    pairing_port::probe_ffi(device_ip, port, out_summary)
 }
 
 

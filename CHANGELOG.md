@@ -2,6 +2,28 @@
 
 All notable changes to SideInstaller are documented here.
 
+## Unreleased
+
+### Fixed
+- **The device link finds the pairing port when it isn't 49152.** iOS gives this iPhone's remote
+  pairing listener whatever port is free when it starts, so it isn't always on 49152, and the
+  device link was refused there with Developer Mode and LocalDevVPN both on. When 49152 refuses
+  and the port the iPhone advertises doesn't answer either, or it advertises none, SideInstaller
+  now knocks on the iPhone's other ports, 32 at a time, and opens the link on the one that
+  answers as its pairing listener, the way siboot 0.19.1 finds it. A closed port refuses at once,
+  so that takes seconds, and the port found is tried first until SideInstaller is closed. Side by
+  Side doesn't knock: the iPhone it reaches isn't this one.
+- **The device link no longer waits for ever on a port something else holds.** When the pairing
+  listener starts late, another of the iPhone's services can get 49152 first. If it took the
+  connection and never answered, the device link waited for its answer for ever; if it answered
+  something else, the link failed as if the pairing file were wrong. SideInstaller now asks each
+  port for the pairing handshake before using it, with 8 s to connect and 10 s to answer, as
+  siboot does, and passes over one that doesn't answer as the pairing listener, as it does a
+  refused one, so the advertised port and the knock look for the listener elsewhere. If it's on
+  no port, SideInstaller says so, and what to check. An address that
+  neither takes nor refuses the connection is reported unreachable after 8 s, where the link
+  waited for iOS to give up on it. Side by Side is unchanged.
+
 ## 2.1.0
 
 ### Added
