@@ -1315,4 +1315,100 @@ let portugueseStrings: [String: String] = [
     "Pick Again": "Escolher de novo",
     "The next sign-in with “%@” asks which developer team signs.":
         "O próximo login com “%@” vai perguntar qual equipe de desenvolvimento assina.",
+    // Shortcuts actions (ShortcutsSupport.swift and the *Shortcuts.swift files).
+    "%@ can't be refreshed: SideInstaller has no IPA to sign it again from. Refresh it in whatever installed it, or import its .ipa into SideInstaller first.":
+        "Não dá para renovar o %@: o SideInstaller não tem o IPA para assiná-lo de novo. Renove-o no app que o instalou, ou importe antes o .ipa dele no SideInstaller.",
+    "%@ is installed.":
+        "O %@ está instalado.",
+    "Apple is asking you to finish signing in. Continue in SideInstaller to answer it.":
+        "A Apple está pedindo para você terminar o login. Continue no SideInstaller para responder.",
+    "LocalDevVPN is connected.":
+        "O LocalDevVPN está conectado.",
+    "LocalDevVPN isn't connected. Connect it before this action runs: Shortcuts' Set VPN action can, or turn on “Start LocalDevVPN when needed” in SideInstaller's Settings.":
+        "O LocalDevVPN não está conectado. Conecte-o antes de esta ação rodar: a ação de VPN do Atalhos consegue fazer isso. Ou ative “Iniciar o LocalDevVPN quando for preciso” nos Ajustes do SideInstaller.",
+    "LocalDevVPN isn't connected. Continue in SideInstaller to connect it.":
+        "O LocalDevVPN não está conectado. Continue no SideInstaller para conectá-lo.",
+    "No route is playing.":
+        "Nenhuma rota está sendo reproduzida.",
+    "Open SideInstaller and accept its terms first.":
+        "Abra o SideInstaller e aceite os termos dele primeiro.",
+    "Pick where the route starts, or set a location first.":
+        "Escolha onde a rota começa, ou defina uma localização primeiro.",
+    "Route started: %@, about %@.":
+        "Rota iniciada: %@, cerca de %@.",
+    "That place has no coordinates. Pick it on the map, or type its address.":
+        "Esse lugar não tem coordenadas. Escolha-o no mapa ou digite o endereço.",
+    "The install didn't start. Open SideInstaller to see why.":
+        "A instalação não começou. Abra o SideInstaller para ver o motivo.",
+
+    // MARK: - Sources
+
+    "Suggested":
+        "Sugeridas",
+
+    "Paste the link of a SideStore or AltStore source, or of a .json source file. Its apps, their updates and release notes show here.":
+        "Cole o link de uma fonte do SideStore ou AltStore, ou de um arquivo de fonte .json. Os apps, as atualizações e as notas de versão aparecem aqui.",
+
+    "Sources":
+        "Fontes",
+    "Add a source":
+        "Adicionar uma fonte",
+    "Add":
+        "Adicionar",
+    "Apps":
+        "Apps",
+    "Updates":
+        "Atualizações",
+    "Update":
+        "Atualizar",
+    "Your sources":
+        "Suas fontes",
+    "Check for updates":
+        "Verificar atualizações",
+    "Copy link":
+        "Copiar link",
+    "Source options":
+        "Opções da fonte",
+    "Loading…":
+        "Carregando…",
+    "What's new":
+        "Novidades",
+    "Version history":
+        "Histórico de versões",
+    "This version has no release notes.":
+        "Esta versão não tem notas de versão.",
+    "%d update":
+        "%d atualização",
+    "%d updates":
+        "%d atualizações",
+    "%d source":
+        "%d fonte",
+    "%d sources":
+        "%d fontes",
+    "Update to %@":
+        "Atualizar para %@",
+    "Install %@ %@?":
+        "Instalar %@ %@?",
+    "Version %@ · from %@":
+        "Versão %@ · de %@",
+    "%@ installed · %@ available":
+        "%@ instalada · %@ disponível",
+    "%@ installed · up to date":
+        "%@ instalada · atualizada",
+    "That source is already added.":
+        "Essa fonte já foi adicionada.",
+    "The source answered with HTTP %d.":
+        "A fonte respondeu com HTTP %d.",
+    "Couldn't reach the source: %@":
+        "Não foi possível acessar a fonte: %@",
+    "That isn't a source link. Paste the whole https:// address of the source.":
+        "Isso não é um link de fonte. Cole o endereço https:// completo da fonte.",
+    "That link didn't return a source. It has to be the source's JSON file itself.":
+        "Esse link não retornou uma fonte. Ele precisa ser o próprio arquivo JSON da fonte.",
+    "Downloads the IPA from the source, then signs it with your Apple ID and installs it, as a custom .ipa would be.":
+        "Baixa o IPA da fonte, depois o assina com seu Apple ID e o instala, como um .ipa personalizado.",
+    "This version is older than the newest one. It's installed over the copy on this iPhone, which may not open data a newer version saved.":
+        "Esta versão é mais antiga que a mais recente. Ela é instalada sobre a cópia deste iPhone, que pode não abrir dados salvos por uma versão mais nova.",
+    "This version is older than the one on this iPhone (%@). Installed over it, it may not open data the newer version saved.":
+        "Esta versão é mais antiga que a deste iPhone (%@). Instalada por cima, ela pode não abrir dados salvos pela versão mais nova.",
 ]

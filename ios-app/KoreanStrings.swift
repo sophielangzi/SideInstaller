@@ -1291,4 +1291,100 @@ let koreanStrings: [String: String] = [
     "Pick the team again?": "팀을 다시 고를까요?",
     "Pick Again": "다시 고르기",
     "The next sign-in with “%@” asks which developer team signs.": "다음에 “%@”(으)로 로그인할 때 서명할 개발자 팀을 묻습니다.",
+    // Shortcuts actions (ShortcutsSupport.swift and the *Shortcuts.swift files).
+    "%@ can't be refreshed: SideInstaller has no IPA to sign it again from. Refresh it in whatever installed it, or import its .ipa into SideInstaller first.":
+        "%@을(를) 갱신할 수 없습니다. SideInstaller에 다시 서명할 IPA가 없습니다. 설치한 도구에서 갱신하거나, 먼저 해당 .ipa를 SideInstaller로 가져오세요.",
+    "%@ is installed.":
+        "%@ 앱이 설치되었습니다.",
+    "Apple is asking you to finish signing in. Continue in SideInstaller to answer it.":
+        "Apple이 로그인을 마치도록 요청하고 있습니다. SideInstaller에서 계속하여 응답하세요.",
+    "LocalDevVPN is connected.":
+        "LocalDevVPN이 연결되어 있습니다.",
+    "LocalDevVPN isn't connected. Connect it before this action runs: Shortcuts' Set VPN action can, or turn on “Start LocalDevVPN when needed” in SideInstaller's Settings.":
+        "LocalDevVPN이 연결되어 있지 않습니다. 이 동작이 실행되기 전에 연결하세요. 단축어의 VPN 동작으로 연결할 수 있습니다. 또는 SideInstaller 설정에서 “필요할 때 LocalDevVPN 시작”을 켜세요.",
+    "LocalDevVPN isn't connected. Continue in SideInstaller to connect it.":
+        "LocalDevVPN이 연결되어 있지 않습니다. 연결하려면 SideInstaller에서 계속하세요.",
+    "No route is playing.":
+        "재생 중인 경로가 없습니다.",
+    "Open SideInstaller and accept its terms first.":
+        "먼저 SideInstaller를 열고 약관에 동의하세요.",
+    "Pick where the route starts, or set a location first.":
+        "경로의 출발 지점을 고르거나, 먼저 위치를 설정하세요.",
+    "Route started: %@, about %@.":
+        "경로를 시작했습니다: %@, 약 %@.",
+    "That place has no coordinates. Pick it on the map, or type its address.":
+        "그 장소에는 좌표가 없습니다. 지도에서 고르거나 주소를 입력하세요.",
+    "The install didn't start. Open SideInstaller to see why.":
+        "설치가 시작되지 않았습니다. SideInstaller를 열어 이유를 확인하세요.",
+
+    // MARK: - Sources
+
+    "Suggested":
+        "추천",
+
+    "Paste the link of a SideStore or AltStore source, or of a .json source file. Its apps, their updates and release notes show here.":
+        "SideStore 또는 AltStore 소스, 또는 .json 소스 파일의 링크를 붙여 넣으세요. 앱, 업데이트, 릴리스 노트가 여기에 표시됩니다.",
+
+    "Sources":
+        "소스",
+    "Add a source":
+        "소스 추가",
+    "Add":
+        "추가",
+    "Apps":
+        "앱",
+    "Updates":
+        "업데이트",
+    "Update":
+        "업데이트",
+    "Your sources":
+        "내 소스",
+    "Check for updates":
+        "업데이트 확인",
+    "Copy link":
+        "링크 복사",
+    "Source options":
+        "소스 옵션",
+    "Loading…":
+        "불러오는 중…",
+    "What's new":
+        "새로운 기능",
+    "Version history":
+        "버전 기록",
+    "This version has no release notes.":
+        "이 버전에는 릴리스 노트가 없습니다.",
+    "%d update":
+        "업데이트 %d개",
+    "%d updates":
+        "업데이트 %d개",
+    "%d source":
+        "소스 %d개",
+    "%d sources":
+        "소스 %d개",
+    "Update to %@":
+        "%@(으)로 업데이트",
+    "Install %@ %@?":
+        "%@ %@을(를) 설치하시겠습니까?",
+    "Version %@ · from %@":
+        "버전 %@ · 출처: %@",
+    "%@ installed · %@ available":
+        "%@ 설치됨 · %@ 사용 가능",
+    "%@ installed · up to date":
+        "%@ 설치됨 · 최신 버전",
+    "That source is already added.":
+        "이미 추가된 소스입니다.",
+    "The source answered with HTTP %d.":
+        "소스가 HTTP %d(으)로 응답했습니다.",
+    "Couldn't reach the source: %@":
+        "소스에 연결할 수 없습니다: %@",
+    "That isn't a source link. Paste the whole https:// address of the source.":
+        "소스 링크가 아닙니다. 소스의 https:// 주소 전체를 붙여 넣으세요.",
+    "That link didn't return a source. It has to be the source's JSON file itself.":
+        "그 링크는 소스를 반환하지 않았습니다. 소스의 JSON 파일 자체여야 합니다.",
+    "Downloads the IPA from the source, then signs it with your Apple ID and installs it, as a custom .ipa would be.":
+        "소스에서 IPA를 다운로드한 다음 사용자의 Apple ID로 서명하고 설치합니다. 사용자 지정 .ipa와 같습니다.",
+    "This version is older than the newest one. It's installed over the copy on this iPhone, which may not open data a newer version saved.":
+        "이 버전은 최신 버전보다 오래되었습니다. 이 iPhone의 앱 위에 설치되며, 최신 버전이 저장한 데이터를 열지 못할 수 있습니다.",
+    "This version is older than the one on this iPhone (%@). Installed over it, it may not open data the newer version saved.":
+        "이 버전은 이 iPhone에 있는 버전(%@)보다 오래되었습니다. 그 위에 설치하면 최신 버전이 저장한 데이터를 열지 못할 수 있습니다.",
 ]

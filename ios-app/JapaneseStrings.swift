@@ -1289,4 +1289,100 @@ let japaneseStrings: [String: String] = [
     "Pick the team again?": "チームを選び直しますか？",
     "Pick Again": "選び直す",
     "The next sign-in with “%@” asks which developer team signs.": "次回「%@」でサインインするときに、署名に使う開発者チームを確認します。",
+    // Shortcuts actions (ShortcutsSupport.swift and the *Shortcuts.swift files).
+    "%@ can't be refreshed: SideInstaller has no IPA to sign it again from. Refresh it in whatever installed it, or import its .ipa into SideInstaller first.":
+        "%@ を更新できません。SideInstaller に署名し直すための IPA がありません。インストール元のアプリで更新するか、先にその .ipa を SideInstaller に読み込んでください。",
+    "%@ is installed.":
+        "%@ をインストールしました。",
+    "Apple is asking you to finish signing in. Continue in SideInstaller to answer it.":
+        "Apple がサインインの完了を求めています。SideInstaller で続けて応答してください。",
+    "LocalDevVPN is connected.":
+        "LocalDevVPN は接続されています。",
+    "LocalDevVPN isn't connected. Connect it before this action runs: Shortcuts' Set VPN action can, or turn on “Start LocalDevVPN when needed” in SideInstaller's Settings.":
+        "LocalDevVPN が接続されていません。このアクションの実行前に接続してください。ショートカットの VPN アクションで接続できます。または、SideInstaller の設定で「必要なときに LocalDevVPN を開始」をオンにしてください。",
+    "LocalDevVPN isn't connected. Continue in SideInstaller to connect it.":
+        "LocalDevVPN が接続されていません。接続するには SideInstaller で続けてください。",
+    "No route is playing.":
+        "再生中のルートはありません。",
+    "Open SideInstaller and accept its terms first.":
+        "先に SideInstaller を開いて、利用規約に同意してください。",
+    "Pick where the route starts, or set a location first.":
+        "ルートの出発地点を選ぶか、先に位置情報を設定してください。",
+    "Route started: %@, about %@.":
+        "ルートを開始しました: %@、約 %@。",
+    "That place has no coordinates. Pick it on the map, or type its address.":
+        "その場所には座標がありません。地図で選ぶか、住所を入力してください。",
+    "The install didn't start. Open SideInstaller to see why.":
+        "インストールが開始されませんでした。SideInstaller を開いて理由を確認してください。",
+
+    // MARK: - Sources
+
+    "Suggested":
+        "おすすめ",
+
+    "Paste the link of a SideStore or AltStore source, or of a .json source file. Its apps, their updates and release notes show here.":
+        "SideStore または AltStore のソース、または .json ソースファイルのリンクを貼り付けてください。アプリ、アップデート、リリースノートがここに表示されます。",
+
+    "Sources":
+        "ソース",
+    "Add a source":
+        "ソースを追加",
+    "Add":
+        "追加",
+    "Apps":
+        "アプリ",
+    "Updates":
+        "アップデート",
+    "Update":
+        "アップデート",
+    "Your sources":
+        "追加したソース",
+    "Check for updates":
+        "アップデートを確認",
+    "Copy link":
+        "リンクをコピー",
+    "Source options":
+        "ソースのオプション",
+    "Loading…":
+        "読み込み中…",
+    "What's new":
+        "新機能",
+    "Version history":
+        "バージョン履歴",
+    "This version has no release notes.":
+        "このバージョンにはリリースノートがありません。",
+    "%d update":
+        "%d 件のアップデート",
+    "%d updates":
+        "%d 件のアップデート",
+    "%d source":
+        "%d 件のソース",
+    "%d sources":
+        "%d 件のソース",
+    "Update to %@":
+        "%@ にアップデート",
+    "Install %@ %@?":
+        "%@ %@ をインストールしますか？",
+    "Version %@ · from %@":
+        "バージョン %@ · %@ から",
+    "%@ installed · %@ available":
+        "%@ をインストール済み · %@ が利用可能",
+    "%@ installed · up to date":
+        "%@ をインストール済み · 最新",
+    "That source is already added.":
+        "そのソースは追加済みです。",
+    "The source answered with HTTP %d.":
+        "ソースが HTTP %d を返しました。",
+    "Couldn't reach the source: %@":
+        "ソースに接続できませんでした：%@",
+    "That isn't a source link. Paste the whole https:// address of the source.":
+        "ソースのリンクではありません。ソースの https:// アドレスを丸ごと貼り付けてください。",
+    "That link didn't return a source. It has to be the source's JSON file itself.":
+        "そのリンクはソースを返しませんでした。ソースの JSON ファイルそのものを指定してください。",
+    "Downloads the IPA from the source, then signs it with your Apple ID and installs it, as a custom .ipa would be.":
+        "ソースから IPA をダウンロードし、あなたの Apple ID で署名してインストールします。カスタム .ipa と同じです。",
+    "This version is older than the newest one. It's installed over the copy on this iPhone, which may not open data a newer version saved.":
+        "このバージョンは最新より古いものです。この iPhone のアプリに上書きでインストールされ、新しいバージョンが保存したデータを開けない場合があります。",
+    "This version is older than the one on this iPhone (%@). Installed over it, it may not open data the newer version saved.":
+        "このバージョンは、この iPhone にあるもの（%@）より古いものです。上書きでインストールすると、新しいバージョンが保存したデータを開けない場合があります。",
 ]

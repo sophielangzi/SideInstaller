@@ -1185,4 +1185,100 @@ let turkishStrings: [String: String] = [
     "Pick Again": "Yeniden seç",
     "The next sign-in with “%@” asks which developer team signs.":
         "“%@” ile bir sonraki oturum açmada hangi geliştirici ekibinin imzalayacağı sorulur.",
+    // Shortcuts actions (ShortcutsSupport.swift and the *Shortcuts.swift files).
+    "%@ can't be refreshed: SideInstaller has no IPA to sign it again from. Refresh it in whatever installed it, or import its .ipa into SideInstaller first.":
+        "%@ yenilenemiyor: SideInstaller'da onu yeniden imzalayacak IPA yok. Onu yükleyen uygulamada yenile ya da önce .ipa dosyasını SideInstaller'a aktar.",
+    "%@ is installed.":
+        "%@ yüklendi.",
+    "Apple is asking you to finish signing in. Continue in SideInstaller to answer it.":
+        "Apple oturum açmayı bitirmeni istiyor. Yanıtlamak için SideInstaller'da devam et.",
+    "LocalDevVPN is connected.":
+        "LocalDevVPN bağlı.",
+    "LocalDevVPN isn't connected. Connect it before this action runs: Shortcuts' Set VPN action can, or turn on “Start LocalDevVPN when needed” in SideInstaller's Settings.":
+        "LocalDevVPN bağlı değil. Bu eylem çalışmadan önce bağla: Kestirmeler'deki VPN eylemi bunu yapabilir. Ya da SideInstaller'ın Ayarlar'ında “Gerektiğinde LocalDevVPN'i başlat”ı aç.",
+    "LocalDevVPN isn't connected. Continue in SideInstaller to connect it.":
+        "LocalDevVPN bağlı değil. Bağlamak için SideInstaller'da devam et.",
+    "No route is playing.":
+        "Oynatılan bir rota yok.",
+    "Open SideInstaller and accept its terms first.":
+        "Önce SideInstaller'ı aç ve koşullarını kabul et.",
+    "Pick where the route starts, or set a location first.":
+        "Rotanın nereden başlayacağını seç ya da önce bir konum ayarla.",
+    "Route started: %@, about %@.":
+        "Rota başladı: %@, yaklaşık %@.",
+    "That place has no coordinates. Pick it on the map, or type its address.":
+        "Bu yerin koordinatları yok. Haritada seç ya da adresini yaz.",
+    "The install didn't start. Open SideInstaller to see why.":
+        "Yükleme başlamadı. Nedenini görmek için SideInstaller'ı aç.",
+
+    // MARK: - Sources
+
+    "Suggested":
+        "Önerilen",
+
+    "Paste the link of a SideStore or AltStore source, or of a .json source file. Its apps, their updates and release notes show here.":
+        "Bir SideStore veya AltStore kaynağının ya da bir .json kaynak dosyasının bağlantısını yapıştırın. Uygulamaları, güncellemeleri ve sürüm notları burada görünür.",
+
+    "Sources":
+        "Kaynaklar",
+    "Add a source":
+        "Kaynak ekle",
+    "Add":
+        "Ekle",
+    "Apps":
+        "Uygulamalar",
+    "Updates":
+        "Güncellemeler",
+    "Update":
+        "Güncelle",
+    "Your sources":
+        "Kaynaklarınız",
+    "Check for updates":
+        "Güncellemeleri denetle",
+    "Copy link":
+        "Bağlantıyı kopyala",
+    "Source options":
+        "Kaynak seçenekleri",
+    "Loading…":
+        "Yükleniyor…",
+    "What's new":
+        "Yenilikler",
+    "Version history":
+        "Sürüm geçmişi",
+    "This version has no release notes.":
+        "Bu sürümün sürüm notu yok.",
+    "%d update":
+        "%d güncelleme",
+    "%d updates":
+        "%d güncelleme",
+    "%d source":
+        "%d kaynak",
+    "%d sources":
+        "%d kaynak",
+    "Update to %@":
+        "%@ sürümüne güncelle",
+    "Install %@ %@?":
+        "%@ %@ yüklensin mi?",
+    "Version %@ · from %@":
+        "Sürüm %@ · kaynak: %@",
+    "%@ installed · %@ available":
+        "%@ yüklü · %@ mevcut",
+    "%@ installed · up to date":
+        "%@ yüklü · güncel",
+    "That source is already added.":
+        "Bu kaynak zaten eklendi.",
+    "The source answered with HTTP %d.":
+        "Kaynak HTTP %d ile yanıt verdi.",
+    "Couldn't reach the source: %@":
+        "Kaynağa ulaşılamadı: %@",
+    "That isn't a source link. Paste the whole https:// address of the source.":
+        "Bu bir kaynak bağlantısı değil. Kaynağın https:// adresinin tamamını yapıştırın.",
+    "That link didn't return a source. It has to be the source's JSON file itself.":
+        "Bu bağlantı bir kaynak döndürmedi. Kaynağın JSON dosyasının kendisi olmalı.",
+    "Downloads the IPA from the source, then signs it with your Apple ID and installs it, as a custom .ipa would be.":
+        "IPA'yı kaynaktan indirir, ardından Apple Kimliğinizle imzalayıp yükler; özel bir .ipa gibi.",
+    "This version is older than the newest one. It's installed over the copy on this iPhone, which may not open data a newer version saved.":
+        "Bu sürüm en yenisinden daha eski. Bu iPhone'daki kopyanın üzerine yüklenir ve daha yeni bir sürümün kaydettiği verileri açamayabilir.",
+    "This version is older than the one on this iPhone (%@). Installed over it, it may not open data the newer version saved.":
+        "Bu sürüm, bu iPhone'daki sürümden (%@) daha eski. Üzerine yüklendiğinde, daha yeni sürümün kaydettiği verileri açamayabilir.",
 ]
