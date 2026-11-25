@@ -3540,8 +3540,8 @@ final class Engine {
     }
 
     /// Sets SideStore up to sign in the way its users got past Apple's -80046
-    /// (`SideStoreAnisetteHandoff`). After the install, as `handOffSplitPairing`;
-    /// failures only log. Runs on `deviceQueue`.
+    /// and HTTP 503s (`SideStoreAnisetteHandoff`). After the install, as
+    /// `handOffSplitPairing`; failures only log. Runs on `deviceQueue`.
     private func handOffSideStoreAnisette(bundleID: String, appName: String, home: SideStoreHome) {
         let prefsPath = home.preferencesPath(hostBundleID: bundleID)
         do {
@@ -3550,10 +3550,12 @@ final class Engine {
                 changes = SideStoreAnisetteHandoff.applySettings(to: &prefs)
             }
             guard !changes.isEmpty else { return }
-            log("Set \(appName)'s anisette the way SideStore's users get past Apple's -80046: \(changes.joined(separator: ", ")) (/\(prefsPath)).")
-            log("If \(appName)'s own sign-in still fails, use its Settings › User Customizations › Reset adi.pb, with “Keep header customizations” unticked, then sign in again.")
+            log("Set \(appName)'s anisette the way SideStore's users get past Apple's -80046 and HTTP 503s: \(changes.joined(separator: ", ")) (/\(prefsPath)).")
+            // -22410 after a change of client info, until the identity is made
+            // again; unticking would put back the default, which gets 503s.
+            log("If \(appName)'s own sign-in still fails (-22410, -45061), use its Settings › User Customizations › Reset adi.pb, with “Keep header customizations” ticked, then sign in again.")
         } catch {
-            log("⚠️ Couldn't set \(appName)'s anisette settings (\(short(error))). If its sign-in fails with -80046, turn off On-device Anisette and Auto Rotation in its settings and pick “SideStore (New)”.")
+            log("⚠️ Couldn't set \(appName)'s anisette settings (\(short(error))). If its sign-in fails with -80046 or HTTP 503, turn off On-device Anisette and Auto Rotation in its settings, pick “SideStore (New)”, and set its client info to say “Mac OS X” where it says “macOS”.")
         }
     }
 
@@ -3658,11 +3660,29 @@ final class Engine {
     // image and a session kept open while the location is simulated. Same
     // approach as StikDebug, over the RPPairing tunnel.
 
-    /// Connect, and mount the developer disk image unless the device already has
-    /// one. Returns true when a mount actually ran, so the UI can say so.
+    /// Connect, mount the developer disk image unless the device already has
+    /// one, and open the location session. Returns true when a mount actually
+    /// ran, so the UI can say so.
     @MainActor
     @discardableResult
     func prepareLocationSimulation(imagePath: String,
+                                   trustcachePath: String,
+                                   manifestPath: String,
+                                   progress: @escaping (Double) -> Void) async throws -> Bool {
+        let mounted = try await prepareDeveloperDiskImage(imagePath: imagePath,
+                                                          trustcachePath: trustcachePath,
+                                                          manifestPath: manifestPath,
+                                                          progress: progress)
+        try await onDeviceQueue { try self.connection.beginLocationSimulation() }
+        return mounted
+    }
+
+    /// Connect, and mount the developer disk image unless the device already
+    /// has one. Location simulation and JIT both need it: DVT and debugserver
+    /// come with it. Returns true when a mount actually ran.
+    @MainActor
+    @discardableResult
+    func prepareDeveloperDiskImage(imagePath: String,
                                    trustcachePath: String,
                                    manifestPath: String,
                                    progress: @escaping (Double) -> Void) async throws -> Bool {
@@ -3670,7 +3690,6 @@ final class Engine {
         let mounted = try await onDeviceQueue { try self.connection.mountedDeveloperImageCount() }
         if mounted > 0 {
             log("Developer disk image already mounted (\(mounted) image(s)).")
-            try await onDeviceQueue { try self.connection.beginLocationSimulation() }
             return false
         }
         log("No developer disk image mounted — mounting the personalized one…")
@@ -3681,7 +3700,6 @@ final class Engine {
                                                                progress: progress)
         }
         log("Developer disk image mounted.")
-        try await onDeviceQueue { try self.connection.beginLocationSimulation() }
         return true
     }
 
@@ -3706,6 +3724,20 @@ final class Engine {
             self.connection.endLocationSimulation()
         }
         log("Simulated location cleared.")
+    }
+
+    // MARK: - JIT tab
+    //
+    // A JIT session runs over a tunnel of its own (`JITSession`), so only the
+    // checks and the app list go through the shared connection.
+
+    /// Every app installed on the device, as installation_proxy reports them
+    /// (the JIT page keeps those that can be debugged). Opens the device link
+    /// first.
+    @MainActor
+    func installedAppPlists() async throws -> [[String: Any]] {
+        try await ensurePairingConnection()
+        return try await onDeviceQueue { try self.connection.installedAppPlists() }
     }
 
     // MARK: - Crash logs (Report a problem)
