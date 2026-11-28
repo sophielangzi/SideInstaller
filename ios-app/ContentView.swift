@@ -10,6 +10,8 @@ struct ContentView: View {
     @EnvironmentObject private var loc: Localizer
     @Environment(\.openURL) private var openURL
     @State private var showSettings = false
+    /// The version log, opened from the update banner's "What's new".
+    @State private var showReleaseNotes = false
     @State private var showImporter = false
     /// True while the pairing-file picker is up.
     @State private var showPairingImporter = false
@@ -42,14 +44,11 @@ struct ContentView: View {
                         pairingFileCard.cascadeItem(2)
                     }
                     // Most-blocking requirement first: an unsupported iOS, then
-                    // Wi-Fi if this run must pair, then the missing tunnel.
+                    // the missing tunnel. No Wi-Fi card: without Wi-Fi, Mobile
+                    // Data Mode (beta) offers Airplane Mode instead.
                     if !engine.isRunning {
                         if !engine.osSupported {
                             osRequirement.cascadeItem(cascade(2))
-                        // Only a run that pairs itself needs Wi-Fi; an imported
-                        // pairing file never touches the local network.
-                        } else if !engine.wifiConnected, engine.needsFreshPairing, engine.canSelfPair {
-                            wifiRequirement.cascadeItem(cascade(2))
                         // Not when Install starts LocalDevVPN itself.
                         } else if !engine.tunnelAvailable {
                             vpnRequirement.cascadeItem(cascade(2))
@@ -99,6 +98,7 @@ struct ContentView: View {
             .background(AppBackground())
             .toolbar { settingsToolbarItem(isPresented: $showSettings) }
             .sheet(isPresented: $showSettings) { SettingsView() }
+            .sheet(isPresented: $showReleaseNotes) { ReleaseNotesView() }
             .sheet(isPresented: $showImporter) {
                 FileImporterRepresentableView(allowedContentTypes: [.ipa]) { urls in
                     guard let url = urls.first else { return }   // empty means cancelled
@@ -229,16 +229,21 @@ struct ContentView: View {
                     }
                     .buttonStyle(.plain, sound: .dismiss)
                 }
-                Menu {
-                    updateOptions
-                } label: {
-                    HStack(spacing: 4) {
-                        Text(L("Get the latest version"))
-                        Image(systemName: "chevron.down")
+                HStack(spacing: 20) {
+                    Menu {
+                        updateOptions
+                    } label: {
+                        HStack(spacing: 4) {
+                            Text(L("Get the latest version"))
+                            Image(systemName: "chevron.down")
+                        }
                     }
-                    .font(.footnote.weight(.medium))
-                    .foregroundStyle(Theme.accent)
+                    // The new version's notes, and the ones before it.
+                    Button(L("What's new")) { showReleaseNotes = true }
+                        .buttonStyle(.plain, sound: .tick)
                 }
+                .font(.footnote.weight(.medium))
+                .foregroundStyle(Theme.accent)
             }
         }
     }
@@ -811,28 +816,6 @@ struct ContentView: View {
                 .foregroundStyle(.secondary)
             pairingImportButton
             pairingDocsLink
-        }
-    }
-
-    // MARK: Wi-Fi requirement
-
-    /// Shown while Wi-Fi is off, which pairing needs.
-    private var wifiRequirement: some View {
-        PanelCard {
-            HStack(alignment: .top, spacing: 12) {
-                Image(systemName: "wifi.slash")
-                    .font(.title3)
-                    .foregroundStyle(Theme.negative)
-                    .frame(width: 28)
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(L("Wi-Fi required"))
-                        .font(.subheadline.weight(.medium))
-                    Text(L("Connect to a Wi-Fi network. Pairing this iPhone needs it — SideInstaller has to be findable on the local network."))
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-            }
         }
     }
 

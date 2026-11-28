@@ -5,6 +5,21 @@ All notable changes to SideInstaller are documented here.
 ## Unreleased
 
 ### Added
+- **Release notes in the app** (#173). About › Release notes, and "What's new" on the update
+  banner, show what changed in each version, as written on its GitHub release, newest first. The
+  version you're on and any newer ones are marked, and each links to its release page.
+- **Mobile Data Mode (beta).** On mobile data without Wi-Fi, iOS refuses new connections from
+  LocalDevVPN. When something you start needs one, SideInstaller now asks whether to try Mobile
+  Data Mode, or to use Wi-Fi, the stable and safer way. In Mobile Data Mode it has you turn on
+  Airplane Mode while it connects, and off again before anything that needs the internet, and
+  keeps the connection it opened instead of opening a new one each time. It covers installs,
+  refreshes, pairing, Location spoofing, JIT, Sideloaded apps, crash logs, Developer Mode and
+  the Shortcuts actions, so testing can show where it works. An install that has to pair no longer
+  waits for Wi-Fi either: the "Wi-Fi required" card is gone.
+
+## 2.3.0
+
+### Added
 - **Routes from more kinds of file.** Play a GPX route, and the Play GPX Route shortcut, also take
   KML (Google Earth and My Maps exports), GeoJSON, and JSON, CSV or plain text with a latitude and
   longitude on each line, the files StikDebug imports. A KML track's times play “As recorded”, as
@@ -32,6 +47,10 @@ All notable changes to SideInstaller are documented here.
   StikDebug ships: a segment that arrives out of order is no longer dropped until it's sent again,
   a write cut short can no longer leave half a packet in the tunnel, and an open tunnel no longer
   wakes the app a thousand times a second. Segments are capped at 8 KB, as idevice caps them now.
+- **On mobile data, the error says to join Wi-Fi.** While this iPhone is on mobile data and not on
+  Wi-Fi, iOS refuses every new connection LocalDevVPN carries to it. SideInstaller said to pair
+  again or restart the iPhone, which can't help, after spending seconds searching the iPhone's
+  other ports for its pairing port. It now says to connect to Wi-Fi, without the search.
 - Reading back a file just written into another app's container can't loop for ever when the file
   changes size meanwhile, and an app whose container iOS won't open is reported as such.
 
